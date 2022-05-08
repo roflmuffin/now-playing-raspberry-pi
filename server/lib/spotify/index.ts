@@ -44,12 +44,17 @@ export async function getSpotifyApi() {
 
   if (db.data?.accessToken) spotifyApi.setAccessToken(db.data.accessToken);
   if (db.data?.refreshToken) spotifyApi.setRefreshToken(db.data.refreshToken);
-  if (db.data?.expiresAt && db.data.expiresAt < Date.now()) {
+  if (
+    db.data?.expiresAt &&
+    db.data?.refreshToken &&
+    db.data.expiresAt < Date.now()
+  ) {
     const refreshedToken = await spotifyApi.refreshAccessToken();
 
     db.data.accessToken = refreshedToken.body.access_token;
     db.data.refreshToken = refreshedToken.body.refresh_token;
-    db.data.expiresAt = Date.now() + refreshedToken.body.expires_in - 5000;
+    db.data.expiresAt =
+      Date.now() + refreshedToken.body.expires_in * 1000 - 5000;
     await db.write();
 
     spotifyApi.setAccessToken(refreshedToken.body.access_token);
