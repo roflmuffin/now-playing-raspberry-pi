@@ -32,9 +32,10 @@ export async function getPlaybackState(): Promise<State> {
 }
 
 export async function getSpotifyApi() {
-  const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } = useRuntimeConfig();
+  const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_DOMAIN } =
+    useRuntimeConfig();
   const spotifyApi = new SpotifyWebApi({
-    redirectUri: "http://localhost:3000/api/spotify/callback",
+    redirectUri: `${SPOTIFY_REDIRECT_DOMAIN}/api/spotify/callback`,
     clientId: SPOTIFY_CLIENT_ID,
     clientSecret: SPOTIFY_CLIENT_SECRET,
   });
