@@ -1,10 +1,18 @@
 import SpotifyWebApi from "spotify-web-api-node";
 
-import { getDb } from "../db";
+import { KVStore } from "../db";
 import { State } from "./types";
 
 export async function getPlaybackState(): Promise<State> {
   const api = await getSpotifyApi();
+
+  if (!KVStore.Values.accessToken) {
+    return {
+      status: "connecting",
+      song: null,
+      processMilliseconds: null,
+    };
+  }
 
   const { body: data } = await api.getMyCurrentPlayingTrack();
 
@@ -40,22 +48,23 @@ export async function getSpotifyApi() {
     clientSecret: SPOTIFY_CLIENT_SECRET,
   });
 
-  const db = await getDb();
+  if (KVStore.Values.accessToken)
+    spotifyApi.setAccessToken(KVStore.Values.accessToken);
+  if (KVStore.Values.refreshToken)
+    spotifyApi.setRefreshToken(KVStore.Values.refreshToken);
 
-  if (db.data?.accessToken) spotifyApi.setAccessToken(db.data.accessToken);
-  if (db.data?.refreshToken) spotifyApi.setRefreshToken(db.data.refreshToken);
   if (
-    db.data?.expiresAt &&
-    db.data?.refreshToken &&
-    db.data.expiresAt < Date.now()
+    KVStore.Values.expiresAt &&
+    KVStore.Values.refreshToken &&
+    KVStore.Values.expiresAt < Date.now()
   ) {
+    console.log("Refreshing token...");
     const refreshedToken = await spotifyApi.refreshAccessToken();
 
-    db.data.accessToken = refreshedToken.body.access_token;
-    db.data.refreshToken = refreshedToken.body.refresh_token;
-    db.data.expiresAt =
+    KVStore.Values.accessToken = refreshedToken.body.access_token;
+    KVStore.Values.refreshToken = refreshedToken.body.refresh_token;
+    KVStore.Values.expiresAt =
       Date.now() + refreshedToken.body.expires_in * 1000 - 5000;
-    await db.write();
 
     spotifyApi.setAccessToken(refreshedToken.body.access_token);
     spotifyApi.setRefreshToken(refreshedToken.body.refresh_token);

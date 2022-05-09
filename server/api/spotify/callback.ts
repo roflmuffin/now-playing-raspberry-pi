@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-node";
-import { getDb } from "~~/server/lib/db";
+import { KVStore } from "~~/server/lib/db";
 import { getSpotifyApi } from "~~/server/lib/spotify";
 
 export default defineEventHandler(async (event) => {
@@ -11,12 +11,11 @@ export default defineEventHandler(async (event) => {
 
   const data = await spotifyApi.authorizationCodeGrant(code.toString());
 
-  const db = await getDb();
-
-  db.data.accessToken = data.body.access_token;
-  db.data.refreshToken = data.body.refresh_token;
-  db.data.expiresAt = Date.now() + data.body.expires_in * 1000 - 5000;
-  await db.write();
+  KVStore.Values = {
+    accessToken: data.body.access_token,
+    refreshToken: data.body.refresh_token,
+    expiresAt: Date.now() + data.body.expires_in * 1000,
+  };
 
   spotifyApi.setAccessToken(data.body.access_token);
   spotifyApi.setRefreshToken(data.body.refresh_token);
