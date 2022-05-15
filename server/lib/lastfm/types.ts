@@ -156,6 +156,7 @@ interface TrackAlbumDetailed {
   image: TrackImage[];
   name: string;
   artist: TrackArtistDetailed;
+  playcount: number;
 }
 
 export interface TopAlbums {
