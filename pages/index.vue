@@ -151,7 +151,7 @@ onUnmounted(() => {
   text-align: center;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 1vw;
 }
 
 .artist {
