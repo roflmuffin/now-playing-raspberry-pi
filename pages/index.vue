@@ -151,6 +151,7 @@ onUnmounted(() => {
   text-align: center;
   display: flex;
   align-items: start;
+  justify-content: center;
   gap: 1vw;
 }
 
@@ -185,5 +186,6 @@ a:hover {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+  padding: 0.5vw;
 }
 </style>
