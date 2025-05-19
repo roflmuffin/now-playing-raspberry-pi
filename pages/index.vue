@@ -87,6 +87,9 @@ onUnmounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 @keyframes hue {
@@ -130,6 +133,7 @@ onUnmounted(() => {
 .track {
   font-weight: bold;
   font-size: var(--font-size-8);
+  font-size: 3vw;
   margin-top: var(--space-4);
   margin-bottom: 0px;
   overflow: hidden;
@@ -140,14 +144,14 @@ onUnmounted(() => {
 }
 
 .artist {
-  font-size: var(--font-size-6);
+  font-size: 2.5vw;
   margin-bottom: var(--space-2);
   text-align: center;
   color: var(--gray-11);
 }
 
 .album {
-  font-size: var(--font-size-4);
+  font-size: 2vw;
   color: var(--gray-11);
   font-weight: 200;
   text-align: center;
