@@ -1,9 +1,10 @@
 import { setResponseHeader, defineEventHandler, EventStream } from "h3";
 import { getNowPlaying } from "../lib/spotify";
 import { getStatus } from "../lib/lastfm";
+import { Song } from "../lib/lastfm/types";
 
 export let clients: EventStream[] = []; // Array to store connected SSE clients
-let latestBackendData = "Waiting for backend check...";
+let latestData: Song | null = null;
 
 const getData = async () => {
   const { LASTFM_API_KEY, LASTFM_USERNAME } = useRuntimeConfig();
@@ -26,7 +27,10 @@ export default defineEventHandler(async (event) => {
   const stream = createEventStream(event);
 
   // Send an initial message to confirm the connection is established
-  stream.push(JSON.stringify(await getData()));
+  if (!latestData) {
+    latestData = await getData();
+  }
+  stream.push(JSON.stringify(latestData));
 
   // Add the client to the list of connected clients
   clients.push(stream);
@@ -41,7 +45,8 @@ export default defineEventHandler(async (event) => {
 
 // Function to update the backend data and notify all connected clients
 export async function updateLatestBackendData() {
-  const payload = JSON.stringify(await getData());
+  latestData = await getData();
+  const payload = JSON.stringify(latestData);
   // Notify all connected clients about the new data
   clients.forEach((client) => {
     client.push(payload);

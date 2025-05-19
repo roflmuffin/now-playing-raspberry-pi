@@ -73,7 +73,15 @@ onUnmounted(() => {
         "
       />
       <div class="text">
-        <div class="track">{{ song.name }}</div>
+        <div class="track">
+          {{ song.name }}
+          <a :href="song.url" target="_blank"
+            ><Icon
+              :name="
+                song.kind === 'spotify' ? 'mdi:spotify' : 'brandico:lastfm'
+              "
+          /></a>
+        </div>
         <div class="artist">{{ song.artist }}</div>
         <div class="album">{{ song.album }}</div>
       </div>
@@ -141,6 +149,9 @@ onUnmounted(() => {
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   text-align: center;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .artist {
@@ -148,6 +159,15 @@ onUnmounted(() => {
   margin-bottom: var(--space-2);
   text-align: center;
   color: var(--gray-11);
+}
+
+a {
+  color: var(--gray-11);
+  display: inline-flex;
+}
+
+a:hover {
+  color: var(--gray-12);
 }
 
 .album {

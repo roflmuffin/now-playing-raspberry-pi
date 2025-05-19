@@ -79,6 +79,8 @@ function formatTrackInfo(
       artist: artist,
       art: coverUrl,
       album: album.name,
+      url: externalUrl,
+      kind: "spotify",
     },
   };
 }

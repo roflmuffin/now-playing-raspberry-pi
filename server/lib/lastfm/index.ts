@@ -4,7 +4,7 @@ import {
   State,
 } from "./types";
 
-export function parseSong(body: LastFMResponseBody | null): State {
+export function parseSong(body: LastFMResponseBody | null) {
   if (!body) {
     return {
       status: "connecting",
@@ -33,11 +33,15 @@ export function parseSong(body: LastFMResponseBody | null): State {
       art: image?.["#text"] ?? lastSong.image[0]["#text"],
       url: lastSong.url,
       album: lastSong.album["#text"],
+      kind: "lastfm",
     },
   };
 }
 
-export async function getStatus(username: string, apiKey: string): Promise<State> {
+export async function getStatus(
+  username: string,
+  apiKey: string
+): Promise<State> {
   const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${username}&limit=2&api_key=${apiKey}&format=json`;
   const response = await fetch(url);
   if (!response.ok) {
