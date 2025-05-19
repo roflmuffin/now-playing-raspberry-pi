@@ -75,7 +75,7 @@ onUnmounted(() => {
       <div class="text">
         <div class="track">
           {{ song.name }}
-          <a :href="song.url" target="_blank"
+          <a :href="song.url" target="_blank" class="link-icon"
             ><Icon
               :name="
                 song.kind === 'spotify' ? 'mdi:spotify' : 'brandico:lastfm'
@@ -150,8 +150,13 @@ onUnmounted(() => {
   -webkit-box-orient: vertical;
   text-align: center;
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 1vw;
+}
+
+.link-icon {
+  font-size: 1.5vw;
+  margin: 1vw 0;
 }
 
 .artist {
