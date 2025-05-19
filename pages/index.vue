@@ -37,6 +37,19 @@ onMounted(() => {
     song.value = JSON.parse(event.data);
   };
 });
+
+// Function to close the SSE connection
+const closeConnection = () => {
+  if (eventSource) {
+    eventSource.close(); // Close the SSE connection
+    console.log("SSE connection closed");
+  }
+};
+
+// Clean up on component unmount or hot reload
+onUnmounted(() => {
+  closeConnection(); // Ensure the connection is closed when the component is destroyed
+});
 </script>
 
 <template>
